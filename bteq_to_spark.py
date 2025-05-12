@@ -15,6 +15,7 @@ To convert a BTEQ SQL script named 'barclays_bteq_script_01.sql' to Spark SQL:
 
 import re
 import sys
+import os
 
 # Extracts SQL statements from a BTEQ script by removing BTEQ-specific commands, single-line comments, multi-line comments, and empty lines.
 def extract_sql_from_bteq(bteq_script: str) -> str:
@@ -166,9 +167,14 @@ def convert_file(input_file: str, output_file: str):
     
     # Convert BTEQ SQL to Spark SQL
     spark_sql = convert_bteq_to_spark(sql_only)
+    
+    # Ensure the output folder exists
+    os.makedirs("output", exist_ok=True)
 
+    # Construct the full output file path
+    output_file_path = os.path.join("output", output_file)
     # Write the Spark SQL to the output file
-    with open(output_file, 'w') as f:
+    with open(output_file_path, 'w') as f:
         f.write(spark_sql)
 
     print(f"Conversion complete. The Spark SQL is saved to {output_file}.")
